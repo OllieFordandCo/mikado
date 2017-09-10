@@ -1,45 +1,39 @@
 {
  "name": "mikado",
  "version": "0.0.1",
- "description": "An adaptative CSS framework that can be as opinionated as you need him to!",
+ "description": "A Javascript library with web fundamentals",
  "main": "dist/mikado.js",
  "scripts": {
   "test": "echo \"Error: no test specified\" && exit 1"
  },
  "repository": {
   "type": "git",
-  "url": "git+https://github.com/OllieFordandCo/indigo.git"
+  "url": "git+https://github.com/OllieFordandCo/mikado.git"
  },
  "keywords": [
-  "css",
-  "scss",
-  "sass",
-  "css",
+  "javascript",
+  "js",
+  "polyfills",
   "framework"
  ],
  "author": "Ollie Ford & Co",
  "devDependencies": {
   "async": "^2.1.4",
-  "autoprefixer": "^6.3.7",
-  "cssnano": "^3.7.1",
   "gulp": "^3.9.1",
   "gulp-minify": "0.0.15",
   "gulp-plumber": "^1.1.0",
-  "gulp-postcss": "^6.1.1",
   "gulp-rename": "~1.2.*",
-  "gulp-sass": "^2.3.1",
   "gulp-sourcemaps": "^2.4.1",
   "gulp-util": "^3.0.7",
   "jshint": "^2.9.2",
   "merge-stream": "^1.0.0",
   "pump": "^1.0.1"
  },
+ "dependencies": {
+ },
  "license": "ISC",
  "bugs": {
-  "url": "https://github.com/OllieFordandCo/indigo/issues"
+  "url": "https://github.com/OllieFordandCo/mikado/issues"
  },
- "homepage": "https://github.com/OllieFordandCo/indigo#readme",
- "dependencies": {
-  "bourbon-neat": "2.1.0"
- }
+ "homepage": "https://github.com/OllieFordandCo/mikado#readme",
 }
