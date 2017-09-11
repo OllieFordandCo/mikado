@@ -18,22 +18,38 @@
  ],
  "author": "Ollie Ford & Co",
  "devDependencies": {
-  "async": "^2.1.4",
+  "async": "^2.5.0",
+  "concat-map": "0.0.1",
+  "copy": "^0.3.0",
   "gulp": "^3.9.1",
+  "gulp-concat": "^2.6.0",
+  "gulp-jshint": "^2.0.1",
+  "gulp-jspm": "^0.5.13",
   "gulp-minify": "0.0.15",
   "gulp-plumber": "^1.1.0",
   "gulp-rename": "~1.2.*",
-  "gulp-sourcemaps": "^2.4.1",
+  "gulp-replace": "^0.5.4",
+  "gulp-sourcemaps": "^2.6.0",
+  "gulp-uglify": "^1.5.4",
   "gulp-util": "^3.0.7",
   "jshint": "^2.9.2",
   "merge-stream": "^1.0.0",
-  "pump": "^1.0.1"
+  "npmlog": "^4.1.2",
+  "pump": "^1.0.1",
+  "request": "^2.81.0"
  },
  "dependencies": {
+  "custom-event-polyfill": "^0.3.0",
+  "domtokenlist-shim": "^1.2.0",
+  "es5-shim": "^4.5.9",
+  "picturefill": "^3.0.2",
+  "promise-polyfill": "^6.0.2",
+  "raf.js": "0.0.4",
+  "smoothscroll-polyfill": "^0.3.4"
  },
  "license": "ISC",
  "bugs": {
   "url": "https://github.com/OllieFordandCo/mikado/issues"
  },
- "homepage": "https://github.com/OllieFordandCo/mikado#readme",
+ "homepage": "https://github.com/OllieFordandCo/mikado#readme"
 }
