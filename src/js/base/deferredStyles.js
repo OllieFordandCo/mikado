@@ -10,7 +10,7 @@ window.addEventListener('load', function() {
                     window.setTimeout(function () {
                         document.documentElement.className = document.documentElement.className.replace("css-loading", "css-loaded");
                         setTimeout(function() {
-                            document.dispatchEvent(new CustomEvent('afterLoad'));
+                            document.dispatchEvent(new CustomEvent('afterLoad', true));
                         }, 400);
                     }, 0);
                 });
