@@ -195,8 +195,8 @@ var doParallax = function() {
     });
 };
 
-window.addEventListener('scroll', doParallax);
-
-window.addEventListener('load', initParallax);
-
-ieScroll();
+if(document.querySelector('[data-parallax]').length > 0) {
+    window.addEventListener('scroll', doParallax);
+    window.addEventListener('load', initParallax);
+    ieScroll();
+}

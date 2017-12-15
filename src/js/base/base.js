@@ -3,11 +3,13 @@ class Base {
         this.w = window;
         this.doc = document;
         this.html = this.doc.documentElement;
-        this.vendor_url = '/dist/js';
+        this.vendor_url = 'dist/js/vendor/';
+        this.polyfills = [];
+        this.polyfillsCount = 0;
 
         var base = this;
         this.docReady(function() {
-            base.loadPolyfill();
+            base.setPolyfills();
             base.bodyScrolled();
             base.loadDeferredStyles();
             base.dataCritical(true);
@@ -15,12 +17,13 @@ class Base {
     }
 
     docReady( cb ){
+        var base = this;
         if( document.body ){
             console.log('Info: Document is ready.');
             return cb();
         }
         setTimeout(function(){
-            this.docReady( cb );
+            base.docReady( cb );
         });
     }
 
@@ -78,26 +81,56 @@ class Base {
         return ss;
     };
 
-    loadScript(url, cb) {
+   loadScript(url, cb, id) {
         var fjs = this.doc.getElementsByTagName('script')[0];
         var js = this.doc.createElement('script');
         js.src = url;
+        if(id) {
+            js.id = id;
+        }
         if(typeof cb == "function") {
             js.onload = cb;
         }
         fjs.parentNode.insertBefore(js, fjs);
     };
 
-    loadPolyfill() {
-        var d = this.doc,
-            w = this.w;
-        ('Promise' in w) || this.loadScript(this.vendor_url+'promise.min.js'),
-        ('scrollBehavior' in d.documentElement.style)  || this.loadScript(this.vendor_url+'smoothscroll.min.js'),
-        ('requestAnimationFrame' in w) || this.loadScript(this.vendor_url+'raf.min.js'),
-        ("function" == typeof CustomEvent) || this.loadScript(this.vendor_url+'custom-event.min.js'),
-        ("srcset" in d.createElement("img")) || this.loadScript(this.vendor_url+'picturefill.min.js'),
-        ('dataset' in d.createElement("div")) || this.loadScript(this.vendor_url+'dataset.min.js'),
-        ("classList" in d.createElement("div")) || this.loadScript(this.vendor_url+'domtokenlist.min.js');
+    addPolyfill(url) {
+        this.polyfills.push(url);
+        this.polyfillsCount++;
+    }
+
+    setPolyfills() {
+        var base = this, d = base.doc, w = base.w, img = document.createElement('img'), input = document.createElement('input'), div = d.createElement("div");
+        ('Promise' in w) || base.addPolyfill('//cdn.jsdelivr.net/bluebird/3.5.0/bluebird.min.js'),
+        ('scrollBehavior' in d.documentElement.style) || base.addPolyfill(base.vendor_url+'smoothscroll.min.js'),
+        ('requestAnimationFrame' in w) || base.addPolyfill(base.vendor_url+'raf.min.js'),
+        ("function" == typeof CustomEvent) || base.addPolyfill(base.vendor_url+'custom-event.min.js'),
+        ("srcset" in img) || base.addPolyfill(base.vendor_url+'picturefill.min.js'),
+        ('dataset' in div) || base.addPolyfill(base.vendor_url+'dataset.min.js'),
+        ("classList" in div) || base.addPolyfill(base.vendor_url+'domtokenlist.min.js'),
+        ('validity' in input && 'badInput' in input.validity && 'patternMismatch' in input.validity && 'rangeOverflow' in input.validity && 'rangeUnderflow' in input.validity && 'stepMismatch' in input.validity && 'tooLong' in input.validity && 'tooShort' in input.validity && 'typeMismatch' in input.validity && 'valid' in input.validity && 'valueMissing' in input.validity) || base.addPolyfill(base.vendor_url+'domtokenlist.min.js');
+
+        console.log(base.polyfills, base.polyfillsCount);
+
+        if(base.polyfills.length > 0) {
+            base.polyfills.forEach(function (url) {
+                base.loadScript(url, function() {
+                    base.polyfillsCount--;
+                    if(base.polyfillsCount == 0) {
+                        Base.triggerEvent('polyfillReady');
+                    }
+                });
+            });
+        } else {
+            Base.triggerEvent('polyfillReady');
+        }
+
+    }
+
+    static triggerEvent(name) {
+        var event = new CustomEvent(name);
+        document.dispatchEvent(event);
+        console.log(name);
     }
 
     bodyScrolled() {
@@ -175,7 +208,7 @@ class Base {
         this.doc.addEventListener('afterLoad', function() {
             console.log('Event: The base has been loaded!');
         });
-        this.doc.dispatchEvent(new CustomEvent('afterLoad', {'bubbles': true, 'cancelable': false}));
+        Base.triggerEvent('afterLoad');
     }
 
 }

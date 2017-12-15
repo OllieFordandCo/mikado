@@ -8,6 +8,7 @@ var $ = {
     minifier: require('gulp-uglify/minifier'),
     plumber: require('gulp-plumber'),
     pump: require('pump'),
+    babel: require('gulp-babel'),
     jshint: require('gulp-jshint'),
     concat: require('gulp-concat'),
     async: require('async'),
@@ -16,46 +17,67 @@ var $ = {
 };
 
 /*
- Gulp Functions - Use on Gulp Tasks
+ * Extracting Main Javascript Files to the src/js/vendor for Minification
  */
 
-var jsVendors = [
+var vendorList = [
     ['./node_modules/promise-polyfill/promise.min.js', 'promise.min.js'],
     ['./node_modules/smoothscroll-polyfill/dist/smoothscroll.js', 'smoothscroll.min.js'],
     ['./node_modules/raf.js/raf.js', 'raf.min.js'],
     ['./node_modules/picturefill/dist/picturefill.js', 'picturefill.min.js'],
     ['./node_modules/es5-shim/es5-shim.min.js', 'es5-shim.min.js'],
     ['./node_modules/domtokenlist-shim/dist/domtokenlist.min.js', 'domtokenlist.min.js'],
-    ['./node_modules/custom-event-polyfill/custom-event-polyfill.js', 'custom-event.min.js']
+    ['./node_modules/custom-event-polyfill/custom-event-polyfill.js', 'custom-event.min.js'],
+    ['./node_modules/validate/dist/validityState-polyfill.js', 'validityState-polyfill.min.js']
 ];
 
-/*
- * Extracting Main Javascript Files to the src/js/vendor for Minification
- */
-
-function jsModules(vendor) {
+function jsVendors(vendor) {
     return gulp.src(vendor[0])
         .pipe($.rename('dist/js/vendor/'+vendor[1]))
         .pipe(gulp.dest('./'));
 }
 
-
-/*
- Gulp Tasks
- */
-
 gulp.task('cp-vendors', function(cb) {
     var vendors = [];
-    jsVendors.forEach(function(vendor) {
+    vendorList.forEach(function(vendor) {
         vendors.push(function(next) {
-            jsModules(vendor).on('end', next);
+            jsVendors(vendor).on('end', next);
         });
     });
     $.async.series(vendors, cb);
 });
 
-gulp.task('base-js', function(){
-    var asset_url = './src/js/base/';
+/*
+ * Extracting Modules for Mikado use
+ */
+
+var moduleList = [
+    ['./node_modules/systemjs/dist/system.js', 'system.min.js'],
+    ['./node_modules/validate/dist/js/validate.js', 'validate.min.js']
+];
+
+function jsModules(vendor) {
+    return gulp.src(vendor[0])
+        .pipe($.rename('dist/js/mikado/modules/'+vendor[1]))
+        .pipe(gulp.dest('./'));
+}
+
+gulp.task('cp-modules', function(cb) {
+    var modules = [];
+    moduleList.forEach(function(module) {
+        modules.push(function(next) {
+            jsModules(module).on('end', next);
+        });
+    });
+    $.async.series(modules, cb);
+});
+
+/*
+ Other Gulp Tasks
+ */
+
+gulp.task('base-es105-js', function(){
+    var asset_url = './src/js/es5/base/';
     return gulp.src(
         [
             asset_url+'noJs.js',
@@ -66,9 +88,34 @@ gulp.task('base-js', function(){
             asset_url+'deferredStyles.js',
             asset_url+'bodyScrolled.js'
         ])
-        .pipe($.concat('base.min.js'))
+        .pipe($.concat('base.es5.min.js'))
         .pipe($.uglify())
         .pipe(gulp.dest('dist/js/base'));
+});
+
+gulp.task('base-js', function(){
+    return gulp.src('./src/js/base/base.js')
+        .pipe($.babel({
+            presets: ["es2015"]
+        }))
+        //.pipe($.uglify())
+        .pipe(gulp.dest('dist/js/base'));
+});
+
+gulp.task('modules-js', function(){
+    return gulp.src('./src/js/modules/**/*.js')
+        .pipe($.uglify())
+        .pipe(gulp.dest('dist/js/modules/'));
+});
+
+gulp.task('mikado-js', function(){
+    return gulp.src(['./src/js/mikado/mikado.js'])
+        .pipe($.concat('mikado.js'))
+        .pipe($.babel({
+            presets: ["es2015"]
+        }))
+        //.pipe($.uglify())
+        .pipe(gulp.dest('dist/js/mikado'));
 });
 
 gulp.task('modules-js', function(){
