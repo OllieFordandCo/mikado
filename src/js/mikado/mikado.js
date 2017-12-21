@@ -57,21 +57,14 @@ class Mikado {
 
     loadEnhancers() {
 
-        Mikado.loadConditionalGlobal('form', 'System', this.moduleURL('system.min.js'), function() {
+        Mikado.loadConditionalGlobal('body', 'System', this.moduleURL('system.min.js'), function() {
             systemConfig = systemConfig || {};
             SystemJS.config(systemConfig);
             Base.triggerEvent('systemReady');
         });
 
-        Mikado.loadConditionalImport('html', this.moduleURL('fontLoader.js'), function(fontLoader) {
-            console.log(fontLoader);
-        });
-
         Mikado.loadConditionalGlobal('form', 'validate', this.moduleURL('validate.min.js'));
 
-        Mikado.loadConditionalGlobal('html', 'jQuery', 'https://code.jquery.com/jquery-3.2.1.min.js', function() {
-            console.log('load first time');
-        });
     }
 
 }
