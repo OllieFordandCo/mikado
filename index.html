@@ -42,7 +42,9 @@
             transform: translateY(50%);
             opacity: 0;
         }
-
+        [data-reveal="fade-in"]:not(.element-visible) {
+            opacity: 0;
+        }
         [data-reveal] {
             transition: transform 400ms linear, opacity 400ms linear;
         }
@@ -122,7 +124,7 @@
             <form class="col-12">
                 <h3 class="display-4">Checkout</h3>
                 <hr>
-                <fieldset class="col-12 col-sm-5" data-reveal="slide-left">
+                <fieldset class="col-12 col-sm-5" data-reveal="fade-in">
                     <div class="grid-gutter m-collapse-1">
                         <legend class="col-12">Complete your purchase.</legend>
                         <div class="col-12">
@@ -157,7 +159,7 @@
                 <div class="container mx-auto">
                     <div class="grid-row m-collapse-1 text-left">
                         <div class="col-12 py-3">
-                            <h1 data-rellax-speed="0.5" data-rellax-percentage="0.5" class="rellax text-center display-3 text-white">Rellax!</h1>
+                            <h1 data-rellax-speed="0.5" data-rellax-percentage="0.5" data-reveal="slide-up" class="rellax text-center display-3 text-white">Rellax!</h1>
                         </div>
                     </div>
                 </div>
