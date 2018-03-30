@@ -57,6 +57,7 @@ class Scrolling {
 
     init() {
         this.elements = document.querySelectorAll('[data-reveal]');
+        scroller.reveal();
         window.addEventListener("scroll", this.runScroll, false);
     }
 }
