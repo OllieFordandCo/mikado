@@ -48,8 +48,10 @@
   "picturefill": "^3.0.2",
   "promise-polyfill": "^6.0.2",
   "raf.js": "0.0.4",
+  "rellax": "^1.6.2",
   "smoothscroll-polyfill": "^0.3.4",
   "systemjs": "^0.20.19",
+  "throttle-debounce": "^1.0.1",
   "validate": "git+https://git@github.com/cferdinandi/validate.git"
  },
  "license": "ISC",

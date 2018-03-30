@@ -73,7 +73,9 @@ var Mikado = function () {
             }
 
             document.addEventListener('loadLazySizes', function () {
-                Mikado.loadConditionalGlobal('.lazyload', 'lazysizes', mikado.moduleURL('lazysizes.min.js'), function () {}, 'lazySizes');
+                window.lazySizesConfig = window.lazySizesConfig || {};
+                var selector = 'lazyClass' in window.lazySizesConfig ? window.lazySizesConfig.lazyClass : '.lazyload';
+                Mikado.loadConditionalGlobal(selector, 'lazysizes', mikado.moduleURL('lazysizes.min.js'), function () {}, 'lazySizes');
             });
 
             if (triggerLoad) {
@@ -134,4 +136,4 @@ var Mikado = function () {
     return Mikado;
 }();
 
-window.mikado = new Mikado();
+var mikado = new Mikado();

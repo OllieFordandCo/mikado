@@ -2850,6 +2850,10 @@ regjsparser@^0.1.4:
   dependencies:
     jsesc "~0.5.0"
 
+rellax@^1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/rellax/-/rellax-1.6.2.tgz#b22c8715f56324fa8b396465d3dca9953b711f30"
+
 remove-trailing-separator@^1.0.1:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/remove-trailing-separator/-/remove-trailing-separator-1.1.0.tgz#c24bce2a283adad5bc3f58e0d48249b92379d8ef"
@@ -3233,6 +3237,10 @@ temp@^0.8.3:
 textextensions@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/textextensions/-/textextensions-1.0.2.tgz#65486393ee1f2bb039a60cbba05b0b68bd9501d2"
+
+throttle-debounce@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/throttle-debounce/-/throttle-debounce-1.0.1.tgz#dad0fe130f9daf3719fdea33dc36a8e6ba7f30b5"
 
 through2@2.X, through2@^2, through2@^2.0.0, through2@^2.0.1, through2@^2.0.3:
   version "2.0.3"

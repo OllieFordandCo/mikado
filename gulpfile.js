@@ -106,8 +106,11 @@ gulp.task('base-js', function(){
 
 gulp.task('modules-js', function(){
     return gulp.src('./src/js/modules/**/*.js')
+        .pipe($.babel({
+            presets: ["es2015"]
+        }))
         .pipe($.uglify())
-        .pipe(gulp.dest('dist/js/modules/'));
+        .pipe(gulp.dest('dist/js/mikado/modules/'));
 });
 
 gulp.task('mikado-js', function(){
@@ -120,8 +123,8 @@ gulp.task('mikado-js', function(){
         .pipe(gulp.dest('dist/js/mikado'));
 });
 
-gulp.task('modules-js', function(){
-    return gulp.src('./src/js/modules/**/*.js')
+gulp.task('modules-es5-js', function(){
+    return gulp.src('./src/js/modules-es5/**/*.js')
         .pipe($.uglify())
-        .pipe(gulp.dest('dist/js/modules/'));
+        .pipe(gulp.dest('dist/js/mikado/modules/'));
 });

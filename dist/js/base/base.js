@@ -111,16 +111,29 @@ var Base = function () {
             }
         }
     }, {
-        key: "bodyScrolled",
-        value: function bodyScrolled() {
-            var doc = this.doc;
-            this.w.addEventListener("scroll", function () {
-                if (this.pageYOffset > 0) {
-                    doc.documentElement.classList.add('scrolled');
-                } else {
-                    doc.documentElement.classList.remove('scrolled');
-                }
-            });
+        key: "updateBody",
+        value: function updateBody() {
+            window.bodyUpdate = false;
+            Base.logger(window.lastPageYOffset > 0);
+            if (window.lastPageYOffset > 0) {
+                document.documentElement.classList.add('scrolled');
+            } else {
+                document.documentElement.classList.remove('scrolled');
+            }
+        }
+    }, {
+        key: "bodyScroll",
+        value: function bodyScroll() {
+            window.lastPageYOffset = window.pageYOffset;
+            base.requestBodyUpdate();
+        }
+    }, {
+        key: "requestBodyUpdate",
+        value: function requestBodyUpdate() {
+            if (!window.bodyUpdate) {
+                requestAnimationFrame(base.updateBody);
+            }
+            window.bodyUpdate = true;
         }
     }, {
         key: "dataCritical",
@@ -156,12 +169,12 @@ var Base = function () {
             this.w.addEventListener('load', function () {
                 var t = doc.getElementById("deferred-styles");
                 if (t) {
-                    window.requestAnimationFrame(function () {
-                        window.setTimeout(function () {
+                    requestAnimationFrame(function () {
+                        setTimeout(function () {
                             var e = document.createElement("div");
                             e.innerHTML = t.textContent, document.body.appendChild(e), t.parentElement.removeChild(t);
-                            window.requestAnimationFrame(function () {
-                                window.setTimeout(function () {
+                            requestAnimationFrame(function () {
+                                setTimeout(function () {
                                     document.documentElement.className = document.documentElement.className.replace("css-loading", "css-loaded");
                                     setTimeout(function () {
                                         Base.logger('Info: All styles loaded, wait and trigger load.');
@@ -188,9 +201,14 @@ var Base = function () {
     }, {
         key: "init",
         value: function init() {
-            var base = this;
-            window.addEventListener('DOMContentLoaded', function () {
-                base.bodyScrolled();
+            var base = this,
+                w = window;
+
+            w.lastPageYOffset = 0;
+            w.bodyUpdate = false;
+            w.addEventListener('scroll', this.bodyScroll, false);
+
+            w.addEventListener('DOMContentLoaded', function () {
                 base.loadDeferredStyles();
                 base.dataCritical();
             });
@@ -222,10 +240,11 @@ var Base = function () {
             var event = new CustomEvent(name);
             document.dispatchEvent(event);
             Base.logger(name);
+            return false;
         }
     }]);
 
     return Base;
 }();
 
-window.base = new Base();
+var base = new Base();

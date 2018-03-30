@@ -24,6 +24,8 @@ class Mikado {
         this.doc.addEventListener('systemReady', function() {
             mikado.systemReady = true;
         });
+
+
     }
 
     // Load Conditionally (selector dependant) script, plus callback
@@ -90,7 +92,9 @@ class Mikado {
         }
 
         document.addEventListener('loadLazySizes', function() {
-            Mikado.loadConditionalGlobal('.lazyload', 'lazysizes', mikado.moduleURL('lazysizes.min.js'), function() {}, 'lazySizes');
+            window.lazySizesConfig = window.lazySizesConfig || {};
+            let selector = ('lazyClass' in window.lazySizesConfig) ? window.lazySizesConfig.lazyClass : '.lazyload';
+            Mikado.loadConditionalGlobal(selector, 'lazysizes', mikado.moduleURL('lazysizes.min.js'), function() {}, 'lazySizes');
         });
 
         if(triggerLoad) {
@@ -112,4 +116,4 @@ class Mikado {
 
 }
 
-window.mikado = new Mikado();
+let mikado = new Mikado();
