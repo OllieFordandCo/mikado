@@ -35,8 +35,12 @@ class Scrolling {
         if(scroller.elements.length > 0) {
             let elements = scroller.elements;
             for (let i = 0; i < elements.length; i++) {
-                let element = elements[i];
-                if (scroller.isPartiallyVisible(element)) {
+                let element = elements[i],
+                    visibilityFunction = element.dataset.reveal == 'full' ? 'isFullyVisible' : 'isPartiallyVisible';
+
+                Base.logger(scroller[visibilityFunction](element));
+
+                if(scroller[visibilityFunction](element)) {
                     element.classList.add("element-visible");
                 } else {
                     element.classList.remove("element-visible");

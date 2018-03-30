@@ -23,28 +23,36 @@
         .full-height {
             overflow: hidden;
         }
-        [data-reveal="slide-left"]:not(.element-visible) {
+        [data-slide-left]:not(.element-visible) {
             transform: translateX(-50%);
             opacity: 0;
         }
 
-        [data-reveal="slide-right"]:not(.element-visible) {
+        [data-slide-right]:not(.element-visible) {
             transform: translateX(50%);
             opacity: 0;
         }
 
-        [data-reveal="slide-up"]:not(.element-visible) {
+        [data-slide-up]:not(.element-visible) {
             transform: translateY(-50%);
             opacity: 0;
         }
 
-        [data-reveal="slide-down"]:not(.element-visible) {
+        [data-slide-down]:not(.element-visible) {
             transform: translateY(50%);
             opacity: 0;
         }
 
+        [data-fade-in]:not(.element-visible) {
+            opacity: 0;
+        }
+
         [data-reveal] {
-            transition: transform 400ms linear, opacity 400ms linear;
+            transition: transform 600ms linear, opacity 600ms linear;
+        }
+
+        [data-reveal][data-reveal-fast] {
+            transition: transform 300ms linear, opacity 300ms linear;
         }
     </style>
 </head>
@@ -58,7 +66,7 @@
                 <div class="container mx-auto">
                     <div class="grid-row m-collapse-1 text-left">
                         <div class="col-12 py-3">
-                            <h1 class="text-center display-3 text-white" data-reveal="slide-down">Mikado</h1>
+                            <h1 class="text-center display-3 text-white" data-reveal data-slide-down>Mikado</h1>
                         </div>
                     </div>
                 </div>
@@ -69,7 +77,7 @@
         <h1 class="display-2">Form Validation</h1>
         <hr>
         <div class="grid-row grid-gutter m-collapse-1 my-3 d-block">
-            <form class="col-12 col-sm-6 validate" data-reveal="slide-left">
+            <form class="col-12 col-sm-6 validate" data-reveal data-slide-left>
                 <h3 class="display-4">Login</h3>
                 <hr>
                 <fieldset>
@@ -86,7 +94,7 @@
                 </fieldset>
                 <button>Submit</button>
             </form>
-            <form class="col-12 col-sm-6" data-reveal="slide-right">
+            <form class="col-12 col-sm-6" data-reveal data-slide-right>
                 <h3 class="display-4">Register</h3>
                 <hr>
                 <fieldset>
@@ -122,7 +130,7 @@
             <form class="col-12">
                 <h3 class="display-4">Checkout</h3>
                 <hr>
-                <fieldset class="col-12 col-sm-5" data-reveal="slide-left">
+                <fieldset class="col-12 col-sm-5" data-reveal data-slide-left>
                     <div class="grid-gutter m-collapse-1">
                         <legend class="col-12">Complete your purchase.</legend>
                         <div class="col-12">
@@ -151,7 +159,7 @@
             </form>
         </div>
     </article>
-    <div class="p-relative half-height" style="background-color:#ffd600;">
+    <div class="p-relative half-height" style="background-color:#ffd600;" data-reveal="full" data-fade-in data-reveal-fast>
         <div class="v-align">
             <div class="p-relative">
                 <div class="container mx-auto">
