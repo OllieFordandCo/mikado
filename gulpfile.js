@@ -20,7 +20,7 @@ var $ = {
  * Extracting Main Javascript Files to the src/js/vendor for Minification
  */
 
-var vendorList = [
+let vendorList = [
     ['./node_modules/promise-polyfill/promise.min.js', 'promise.min.js'],
     ['./node_modules/smoothscroll-polyfill/dist/smoothscroll.js', 'smoothscroll.min.js'],
     ['./node_modules/raf.js/raf.js', 'raf.min.js'],
@@ -38,7 +38,7 @@ function jsVendors(vendor) {
 }
 
 gulp.task('cp-vendors', function(cb) {
-    var vendors = [];
+    let vendors = [];
     vendorList.forEach(function(vendor) {
         vendors.push(function(next) {
             jsVendors(vendor).on('end', next);
@@ -51,9 +51,11 @@ gulp.task('cp-vendors', function(cb) {
  * Extracting Modules for Mikado use
  */
 
-var moduleList = [
+let moduleList = [
     ['./node_modules/systemjs/dist/system.js', 'system.min.js'],
-    ['./node_modules/validate/dist/js/validate.js', 'validate.min.js']
+    ['./node_modules/validate/dist/js/validate.js', 'validate.min.js'],
+    ['./node_modules/lazysizes/lazysizes.js', 'lazysizes.min.js'],
+    ['./node_modules/lazysizes/plugins/unveilhooks/ls.unveilhooks.js', 'ls.unveilhooks.min.js']
 ];
 
 function jsModules(vendor) {
@@ -63,7 +65,7 @@ function jsModules(vendor) {
 }
 
 gulp.task('cp-modules', function(cb) {
-    var modules = [];
+    let modules = [];
     moduleList.forEach(function(module) {
         modules.push(function(next) {
             jsModules(module).on('end', next);
@@ -76,8 +78,8 @@ gulp.task('cp-modules', function(cb) {
  Other Gulp Tasks
  */
 
-gulp.task('base-es105-js', function(){
-    var asset_url = './src/js/es5/base/';
+gulp.task('base-es5-js', function(){
+    let asset_url = './src/js/es5/base/';
     return gulp.src(
         [
             asset_url+'noJs.js',

@@ -5,41 +5,36 @@ class Base {
         this.html = this.doc.documentElement;
         this.vendor_url = 'dist/js/vendor/';
         this.polyfills = [];
+        this.dev = true;
         this.polyfillsCount = 0;
 
-        var base = this;
-        this.docReady(function() {
-            base.setPolyfills();
-            base.bodyScrolled();
-            base.loadDeferredStyles();
-            base.dataCritical(true);
-        });
+        if(this.dev) {
+            window.BaseDev = this.dev;
+        }
+
+        this.setPolyfills();
+        this.init();
     }
 
-    docReady( cb ){
-        var base = this;
-        if( document.body ){
-            console.log('Info: Document is ready.');
-            return cb();
+    static logger(message) {
+        if(window.BaseDev) {
+            console.log(message);
         }
-        setTimeout(function(){
-            base.docReady( cb );
-        });
     }
 
     loadCSS( href, before, media ){
-        var doc = this.doc;
-        var ss = doc.createElement( "link" );
-        var ref;
+        let doc = document;
+        let ss = doc.createElement( "link" );
+        let ref;
         if( before ){
             ref = before;
         }
         else {
-            var refs = ( doc.body || doc.getElementsByTagName( "head" )[ 0 ] ).childNodes;
+            let refs = ( doc.body || doc.getElementsByTagName( "head" )[ 0 ] ).childNodes;
             ref = refs[ refs.length - 1];
         }
 
-        var sheets = doc.styleSheets;
+        let sheets = doc.styleSheets;
         ss.rel = "stylesheet";
         ss.href = href;
         // temporarily set media to something inapplicable to ensure it'll fetch without blocking render
@@ -48,13 +43,13 @@ class Base {
         // Inject link
         // Note: the ternary preserves the existing behavior of "before" argument, but we could choose to change the argument to "after" in a later release and standardize on ref.nextSibling for all refs
         // Note: `insertBefore` is used instead of `appendChild`, for safety re: http://www.paulirish.com/2011/surefire-dom-element-insertion/
-        this.docReady( function(){
+        window.addEventListener('DOMContentLoaded', function(){
             ref.parentNode.insertBefore( ss, ( before ? ref : ref.nextSibling ) );
         });
         // A method (exposed on return object for external use) that mimics onload by polling document.styleSheets until it includes the new sheet.
-        var onloadcssdefined = function( cb ){
-            var resolvedHref = ss.href;
-            var i = sheets.length;
+        let onloadcssdefined = function( cb ){
+            let resolvedHref = ss.href;
+            let i = sheets.length;
             while( i-- ){
                 if( sheets[ i ].href === resolvedHref ){
                     return cb();
@@ -81,14 +76,14 @@ class Base {
         return ss;
     };
 
-   loadScript(url, cb, id) {
-        var fjs = this.doc.getElementsByTagName('script')[0];
-        var js = this.doc.createElement('script');
+   static loadScript(url, cb, id) {
+        let fjs = document.getElementsByTagName('script')[0];
+        let js = document.createElement('script');
         js.src = url;
         if(id) {
             js.id = id;
         }
-        if(typeof cb == "function") {
+        if(typeof cb === "function") {
             js.onload = cb;
         }
         fjs.parentNode.insertBefore(js, fjs);
@@ -100,23 +95,23 @@ class Base {
     }
 
     setPolyfills() {
-        var base = this, d = base.doc, w = base.w, img = document.createElement('img'), input = document.createElement('input'), div = d.createElement("div");
+        let base = this, d = base.doc, w = base.w, img = document.createElement('img'), input = document.createElement('input'), div = d.createElement("div");
         ('Promise' in w) || base.addPolyfill('//cdn.jsdelivr.net/bluebird/3.5.0/bluebird.min.js'),
         ('scrollBehavior' in d.documentElement.style) || base.addPolyfill(base.vendor_url+'smoothscroll.min.js'),
         ('requestAnimationFrame' in w) || base.addPolyfill(base.vendor_url+'raf.min.js'),
-        ("function" == typeof CustomEvent) || base.addPolyfill(base.vendor_url+'custom-event.min.js'),
+        ("function" === typeof CustomEvent) || base.addPolyfill(base.vendor_url+'custom-event.min.js'),
         ("srcset" in img) || base.addPolyfill(base.vendor_url+'picturefill.min.js'),
         ('dataset' in div) || base.addPolyfill(base.vendor_url+'dataset.min.js'),
         ("classList" in div) || base.addPolyfill(base.vendor_url+'domtokenlist.min.js'),
         ('validity' in input && 'badInput' in input.validity && 'patternMismatch' in input.validity && 'rangeOverflow' in input.validity && 'rangeUnderflow' in input.validity && 'stepMismatch' in input.validity && 'tooLong' in input.validity && 'tooShort' in input.validity && 'typeMismatch' in input.validity && 'valid' in input.validity && 'valueMissing' in input.validity) || base.addPolyfill(base.vendor_url+'domtokenlist.min.js');
 
-        console.log(base.polyfills, base.polyfillsCount);
+        Base.logger(base.polyfills, base.polyfillsCount);
 
         if(base.polyfills.length > 0) {
             base.polyfills.forEach(function (url) {
-                base.loadScript(url, function() {
+                Base.loadScript(url, function() {
                     base.polyfillsCount--;
-                    if(base.polyfillsCount == 0) {
+                    if(base.polyfillsCount === 0) {
                         Base.triggerEvent('polyfillReady');
                     }
                 });
@@ -128,13 +123,13 @@ class Base {
     }
 
     static triggerEvent(name) {
-        var event = new CustomEvent(name);
+        let event = new CustomEvent(name);
         document.dispatchEvent(event);
-        console.log(name);
+        Base.logger(name);
     }
 
     bodyScrolled() {
-        var doc = this.doc;
+        let doc = this.doc;
         this.w.addEventListener("scroll", function () {
             if(this.pageYOffset > 0) {
                 doc.documentElement.classList.add('scrolled');
@@ -144,10 +139,10 @@ class Base {
         });
     }
 
-    dataCritical(init) {
-        var images = document.querySelectorAll('img[data-critical]');
-        var revealImage = function(ele){
-            console.log('Reveling Critical Image.');
+    dataCritical() {
+        let images = document.querySelectorAll('img[data-critical]');
+        let revealImage = function(ele){
+            Base.logger('Reveling Critical Image.');
             ele = (ele instanceof HTMLImageElement) ? ele : ele.target;
             ele.removeAttribute('data-critical');
             ele.style.willChange = 'auto';
@@ -164,33 +159,26 @@ class Base {
                     image.addEventListener('load', revealImage);
                 }
             });
-            /*
-            if(init) {
-                var base = this;
-                base.w.addEventListener('load', function() {
-                    base.dataCritical(false);
-                });
-            }*/
         } else {
-            console.log('Info: No Critical Images Found.');
+            Base.logger('Info: No Critical Images Found.');
         }
     };
 
     loadDeferredStyles() {
-        var doc = this.doc,
+        let doc = this.doc,
             base = this;
         this.w.addEventListener('load', function() {
-            var t = doc.getElementById("deferred-styles");
+            let t = doc.getElementById("deferred-styles");
             if(t) {
                 window.requestAnimationFrame(function () {
                     window.setTimeout(function () {
-                        var e = document.createElement("div");
+                        let e = document.createElement("div");
                         e.innerHTML = t.textContent, document.body.appendChild(e), t.parentElement.removeChild(t);
                         window.requestAnimationFrame(function () {
                             window.setTimeout(function () {
                                 document.documentElement.className = document.documentElement.className.replace("css-loading", "css-loaded");
                                 setTimeout(function() {
-                                    console.log('Info: All styles loaded, wait and trigger load.');
+                                    Base.logger('Info: All styles loaded, wait and trigger load.');
                                     base.triggerLoad();
                                 }, 400);
                             }, 0);
@@ -198,7 +186,7 @@ class Base {
                     }, 0);
                 });
             } else {
-                console.log('Info: Deferred Styles not found, skipping to Base Load');
+                Base.logger('Info: Deferred Styles not found, skipping to Base Load');
                 base.triggerLoad();
             }
         });
@@ -206,11 +194,19 @@ class Base {
 
     triggerLoad() {
         this.doc.addEventListener('afterLoad', function() {
-            console.log('Event: The base has been loaded!');
+            Base.logger('Event: The base has been loaded!');
         });
         Base.triggerEvent('afterLoad');
     }
 
+    init() {
+        let base = this;
+        window.addEventListener('DOMContentLoaded', function() {
+            base.bodyScrolled();
+            base.loadDeferredStyles();
+            base.dataCritical();
+        });
+    }
 }
 
-const base = new Base();
+window.base = new Base();

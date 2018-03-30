@@ -4,45 +4,123 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <script src="dist/js/base/base.js"></script>
+    <link href="../indigo/dist/css/indigo.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-            <h1>Something</h1>
-            <form class="validate">
-                <div>
-                    <label for="text">Name</label>
-                    <input type="text" id="text" required>
+<div class="p-relative bg-primary full-height">
+    <div class="v-align">
+        <div class="overlay-bg bg-transparent lazyload p-absolute half-height-container p-top p-left p-bottom p-right"
+             data-bg="http://cdn2.twinfinite.net/wp-content/uploads/2016/11/PSVR-headset.jpg"></div>
+        <div class="v-align-bottom bg-red half-height-container p-absolute p-bottom p-left p-right"></div>
+        <div class="p-relative">
+            <div class="container mx-auto">
+                <div class="grid-row m-collapse-1 text-left">
+                    <div class="col-12 py-3">
+                        <h1 class="text-center display-3 text-white">Something</h1>
+                    </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<article class="container grid-row mx-auto py-1">
 
-                <div>
-                    <label for="email">Email</label>
-                    <input type="email" id="email" title="The domain portion of the email address is invalid (the portion after the @)." pattern="^([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22))*\x40([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d))*(\.\w{2,})+$" required>
+    <h1 class="display-2">Forms</h1>
+    <hr>
+    <div class="grid-row grid-gutter m-collapse-1 my-3 d-block">
+        <form class="col-12 col-sm-6 validate">
+            <h3 class="display-4">Login</h3>
+            <hr>
+            <fieldset>
+                <legend>Access your account</legend>
+                <label for="username">Username:</label><br/>
+                <input type="text" id="username" name="username" maxlength="12" placeholder="Username" value=""
+                       required><br/>
+                <label for="password">Password:</label><br/> <input type="password" id="password" name="password"
+                                                                    maxlength="12" placeholder="Your Password" required>
+                <label for="remember-me" class="mb-2 float-left">
+                    <input type="checkbox" class="mr-1" id="remember-me" name="remember-me"> Remember Me
+                </label>
+                <a href="#" class="float-right">Forgot Password?</a>
+            </fieldset>
+            <button>Submit</button>
+        </form>
+        <form class="col-12 col-sm-6">
+            <h3 class="display-4">Register</h3>
+            <hr>
+            <fieldset>
+                <legend>Create a new account</legend>
+                <div class="grid-gutter m-collapse-1">
+                    <div class="col-12 col-sm-6">
+                        <label for="register-username">Username:</label><br/>
+                        <input type="text" id="register-username" name="username" maxlength="12" placeholder="Username"
+                               value=""
+                               required><br/>
+                    </div>
+                    <div class="col-12 col-sm-6">
+                        <label for="register-email">Email Address:</label><br/>
+                        <input type="email" id="register-email" name="email" maxlength="30" placeholder="Email" value=""
+                               required><br/>
+                    </div>
                 </div>
-
-                <div>
-                    <label for="url">URL</label>
-                    <input type="url" id="url" title="The URL is a missing a TLD (for example, .com)." pattern="^(?:(?:https?|HTTPS?|ftp|FTP):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-zA-Z\u00a1-\uffff0-9]-*)*[a-zA-Z\u00a1-\uffff0-9]+)(?:\.(?:[a-zA-Z\u00a1-\uffff0-9]-*)*[a-zA-Z\u00a1-\uffff0-9]+)*(?:\.(?:[a-zA-Z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$" required>
+                <label for="register-password">Password:</label><br/> <input type="password" id="register-password"
+                                                                             name="password" maxlength="12"
+                                                                             placeholder="Your Password" required>
+                <label for="register-password">Confirm Password:</label><br/> <input type="password"
+                                                                                     id="confirm-password"
+                                                                                     name="password" maxlength="12"
+                                                                                     placeholder="Your Password"
+                                                                                     required>
+                <div class="checkbox mb-2">
+                    <input type="checkbox" class="mr-1" id="tcs" name="tcs">
+                    <label for="tcs" class="text-thin"> I accept the terms and conditions.</label>
                 </div>
-
-                <div>
-                    <strong>Radio Buttons</strong>
-                    <label class="label-normal">
-                        <input type="radio" name="radio" id="radio-1" required>
-                        Yes
-                    </label>
-                    <label class="label-normal">
-                        <input type="radio" name="radio" id="radio-2" required>
-                        No
-                    </label>
+            </fieldset>
+            <button>Register</button>
+        </form>
+        <form class="col-12">
+            <h3 class="display-4">Checkout</h3>
+            <hr>
+            <fieldset class="col-12 col-sm-5">
+                <div class="grid-gutter m-collapse-1">
+                    <legend class="col-12">Complete your purchase.</legend>
+                    <div class="col-12">
+                        <label for="card-number">Card number:</label><br/>
+                        <input type="text" id="card-number" name="card-number" minlength="16" maxlength="16" placeholder="XXXX XXXX XXXX XXXX"
+                               value=""
+                               required><br/>
+                    </div>
+                    <div class="col-6">
+                        <label>Expiry Date:</label><br/>
+                        <input type="text" class="col-6" name="expiration-day" maxlength="12" placeholder="XX" value=""
+                               required>
+                        <input type="text" class="col-6" name="expiration-month" maxlength="12" placeholder="XX" value=""
+                               required>
+                    </div>
+                    <div class="col-6">
+                        <label>CCV:</label><br/>
+                        <input type="text" name="expiration-day" maxlength="3" placeholder="XXX" value=""
+                               required>
+                    </div>
+                    <footer class="col-12 mt-2 text-center">
+                        <button>Pay Now</button>
+                    </footer>
                 </div>
-
-                <input type="submit" class="button" value="Submit">
-            </form>
-
+            </fieldset>
+        </form>
+    </div>
+</article> 
     <script src="dist/js/mikado/mikado.js"></script>
     <script>
         var systemConfig = {
             baseURL: '/mikado/'
         };
     </script>
+    <noscript id="deferred-styles">
+        <link rel="stylesheet" type="text/css" href="../indigo/dist/css/theme/theme.css"/>
+        <link rel="preload" name="geomanistregular" weight="400" href="../indigo/dist/fonts/geomanist-regular-webfont.woff2" as="font">
+        <link rel="preload" name="geomanistregular" weight="500" href="../indigo/dist/fonts/geomanist-book-webfont.woff2" as="font">
+        <link rel="preload" name="geomanistregular" weight="200" href="../indigo/dist/fonts/geomanist-extralight-webfont.woff2" as="font">
+    </noscript>
 </body>
 </html>

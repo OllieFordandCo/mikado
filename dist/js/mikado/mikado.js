@@ -14,19 +14,30 @@ var Mikado = function () {
         this.vendorUrl = 'dist/js/vendor/';
         this.moduleUrl = 'dist/js/mikado/modules/';
         this.polyfillReady = false;
+        this.dev = false;
         this.systemReady = false;
 
         var mikado = this;
 
         this.doc.addEventListener('polyfillReady', function () {
-            this.polyfillReady = true;
+            mikado.polyfillReady = true;
+        });
+
+        this.doc.addEventListener('DOMContentLoaded', function () {
+            Base.logger('Window Loaded: loading enhancers...');
             mikado.loadEnhancers();
         });
 
         this.doc.addEventListener('systemReady', function () {
-            this.systemReady = false;
+            mikado.systemReady = true;
         });
     }
+
+    // Load Conditionally (selector dependant) script, plus callback
+    // If SystemJS is not ready we will ensure it will trigger when it is
+    // The function will return either the import (which can be chained if your callback returns the value of the promise) or false if it was queued.
+    // If you truly need to chain more than one callback, you should wrap this function on the systemReady event so you know you will get the promise.
+
 
     _createClass(Mikado, [{
         key: 'moduleURL',
@@ -34,38 +45,79 @@ var Mikado = function () {
             return this.moduleUrl + module;
         }
     }, {
-        key: 'loadEnhancers',
-        value: function loadEnhancers() {
-
+        key: 'loadSystemJs',
+        value: function loadSystemJs() {
+            // Critical for more complex imports.
             Mikado.loadConditionalGlobal('body', 'System', this.moduleURL('system.min.js'), function () {
                 systemConfig = systemConfig || {};
                 SystemJS.config(systemConfig);
                 Base.triggerEvent('systemReady');
             });
+        }
 
+        // Example of necessary conditional dependencies before a conditional load
+
+    }, {
+        key: 'loadLazySizes',
+        value: function loadLazySizes() {
+
+            var triggerLoad = false;
+
+            if (document.querySelector('[data-bg]')) {
+                Mikado.loadConditionalGlobal('[data-bg]', 'unveilhooks', mikado.moduleURL('ls.unveilhooks.min.js'), function () {
+                    Base.triggerEvent('loadLazySizes');
+                }, null);
+                triggerLoad = false;
+            } else {
+                triggerLoad = true;
+            }
+
+            document.addEventListener('loadLazySizes', function () {
+                Mikado.loadConditionalGlobal('.lazyload', 'lazysizes', mikado.moduleURL('lazysizes.min.js'), function () {}, 'lazySizes');
+            });
+
+            if (triggerLoad) {
+                Base.triggerEvent('loadLazySizes');
+            }
+        }
+    }, {
+        key: 'loadEnhancers',
+        value: function loadEnhancers() {
+
+            this.loadSystemJs();
+
+            // Critical if forms are present.
             Mikado.loadConditionalGlobal('form', 'validate', this.moduleURL('validate.min.js'));
+
+            this.loadLazySizes();
         }
     }], [{
         key: 'loadConditionalImport',
         value: function loadConditionalImport(selector, plugin, cb) {
             if (document.querySelector(selector)) {
                 if ('System' in Window) {
-                    System.import(plugin).then(cb);
+                    return System.import(plugin).then(cb);
                 } else {
                     document.addEventListener('systemReady', function () {
                         System.import(plugin).then(cb);
                     });
+                    return false;
                 }
             }
         }
+
+        // Key needs to be both the id of the script, or the
+
     }, {
         key: 'loadConditionalGlobal',
         value: function loadConditionalGlobal(selector, key, plugin, cb) {
+            var global = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
+
             cb = cb || function () {};
             if (document.querySelector(selector)) {
-                var scriptSelector = 'script[id="' + key + '"]';
+                var scriptSelector = 'script#' + key;
                 if (document.querySelector(scriptSelector)) {
-                    if (window[key]) {
+                    if (global in window) {
                         cb.call();
                     } else {
                         document.querySelector(scriptSelector).addEventListener('load', function () {
@@ -73,7 +125,7 @@ var Mikado = function () {
                         });
                     }
                 } else {
-                    base.loadScript(plugin, cb, key);
+                    Base.loadScript(plugin, cb, key);
                 }
             }
         }
@@ -82,4 +134,4 @@ var Mikado = function () {
     return Mikado;
 }();
 
-var mikado = new Mikado();
+window.mikado = new Mikado();

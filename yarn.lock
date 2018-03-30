@@ -2049,6 +2049,10 @@ lazy-cache@^2.0.1:
   dependencies:
     set-getter "^0.1.0"
 
+lazysizes@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/lazysizes/-/lazysizes-4.0.2.tgz#2316aff5bc35ec01dcef60cb51f33f69558694a2"
+
 liftoff@^2.1.0, liftoff@^2.2.0, liftoff@^2.2.1:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/liftoff/-/liftoff-2.3.0.tgz#a98f2ff67183d8ba7cfaca10548bd7ff0550b385"
