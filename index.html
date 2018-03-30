@@ -23,6 +23,14 @@
         .full-height {
             overflow: hidden;
         }
+        [data-reveal]:not(.element-visible) {
+            transform: translateX(-300px);
+            opacity: 0;
+        }
+                
+        [data-reveal] {
+            transition: transform 400ms linear, opacity 400ms linear;
+        }
     </style>
 </head>
 <body>
@@ -100,7 +108,7 @@
             <form class="col-12">
                 <h3 class="display-4">Checkout</h3>
                 <hr>
-                <fieldset class="col-12 col-sm-5">
+                <fieldset class="col-12 col-sm-5" data-reveal>
                     <div class="grid-gutter m-collapse-1">
                         <legend class="col-12">Complete your purchase.</legend>
                         <div class="col-12">
@@ -143,6 +151,7 @@
         </div>
     </div>
     <script src="dist/js/mikado/mikado.js"></script>
+    <script src="dist/js/mikado/modules/scroller.js"></script>
     <script>
         var systemConfig = {
             baseURL: '/mikado/'
