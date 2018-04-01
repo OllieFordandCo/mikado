@@ -1,26 +1,15 @@
-class Looper {
-
+class Scrolling {
     constructor() {
+        this.isScrolling = false;
         this.elements = [];
-        this.lastPageYOffset = 0;
-        this.ticking = false;
-
-        window.looper = this;
-        window.nextLoop = window.requestAnimationFrame ||
-                window.webkitRequestAnimationFrame ||
-                window.mozRequestAnimationFrame ||
-                window.msRequestAnimationFrame ||
-                window.oRequestAnimationFrame ||
-                // IE Fallback, you can even fallback to onscroll
-                function(callback){ window.setTimeout(callback, 1000/60) };
         document.addEventListener('DOMContentLoaded', function() {
-            looper.init();
+            scroller.init();
         });
     }
 
-    doYScroll() {
-        // All vertical
-        this.reveal();
+    doScrolling(e) {
+        scroller.reveal();
+        console.log('Scroller');
     }
 
     isPartiallyVisible(el) {
@@ -43,13 +32,15 @@ class Looper {
     }
 
     reveal(e) {
-        if(looper.elements.length > 0) {
-            let elements = looper.elements;
+        if(scroller.elements.length > 0) {
+            let elements = scroller.elements;
             for (let i = 0; i < elements.length; i++) {
                 let element = elements[i],
                     visibilityFunction = element.dataset.reveal == 'full' ? 'isFullyVisible' : 'isPartiallyVisible';
 
-                if(looper[visibilityFunction](element)) {
+                Base.logger(scroller[visibilityFunction](element));
+
+                if(scroller[visibilityFunction](element)) {
                     element.classList.add("element-visible");
                 } else {
                     element.classList.remove("element-visible");
@@ -58,32 +49,21 @@ class Looper {
         }
     }
 
-    loop(){
-        let currentScrollY = looper.lastPageYOffset;
-        if(currentScrollY !== window.pageYOffset) {
-            looper.doYScroll();
-            nextLoop( looper.loop );
-        } else {
-            looper.ticking = false;
-        }
-    }
-
-
-
     runScroll(e) {
-        console.log('scrolling');
-        if(!looper.ticking) {
-            looper.lastPageYOffset = window.pageYOffset;
-            looper.loop();
+        if (!scroller.isScrolling) {
+            window.requestAnimationFrame(function () {
+                scroller.doScrolling(e);
+                scroller.isScrolling = false;
+            });
         }
-        looper.ticking = true;
+        scroller.isScrolling = true;
     }
 
     init() {
         this.elements = document.querySelectorAll('[data-reveal]');
+        scroller.reveal();
         window.addEventListener("scroll", this.runScroll, false);
-        looper.doYScroll();
-     }
+    }
 }
 
-new Looper();
+window.scroller = new Scrolling();

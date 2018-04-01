@@ -95,7 +95,8 @@ var Base = function () {
                 div = d.createElement("div");
             'Promise' in w || base.addPolyfill('//cdn.jsdelivr.net/bluebird/3.5.0/bluebird.min.js'), 'scrollBehavior' in d.documentElement.style || base.addPolyfill(base.vendor_url + 'smoothscroll.min.js'), 'requestAnimationFrame' in w || base.addPolyfill(base.vendor_url + 'raf.min.js'), "function" === typeof CustomEvent || base.addPolyfill(base.vendor_url + 'custom-event.min.js'), "srcset" in img || base.addPolyfill(base.vendor_url + 'picturefill.min.js'), 'dataset' in div || base.addPolyfill(base.vendor_url + 'dataset.min.js'), "classList" in div || base.addPolyfill(base.vendor_url + 'domtokenlist.min.js'), 'validity' in input && 'badInput' in input.validity && 'patternMismatch' in input.validity && 'rangeOverflow' in input.validity && 'rangeUnderflow' in input.validity && 'stepMismatch' in input.validity && 'tooLong' in input.validity && 'tooShort' in input.validity && 'typeMismatch' in input.validity && 'valid' in input.validity && 'valueMissing' in input.validity || base.addPolyfill(base.vendor_url + 'domtokenlist.min.js');
 
-            Base.logger(base.polyfills, base.polyfillsCount);
+            Base.logger(base.polyfills);
+            Base.logger(base.polyfillsCount);
 
             if (base.polyfills.length > 0) {
                 base.polyfills.forEach(function (url) {
@@ -114,7 +115,6 @@ var Base = function () {
         key: "updateBody",
         value: function updateBody() {
             window.bodyUpdate = false;
-            Base.logger(window.lastPageYOffset > 0);
             if (window.lastPageYOffset > 0) {
                 document.documentElement.classList.add('scrolled');
             } else {

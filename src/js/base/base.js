@@ -105,7 +105,8 @@ class Base {
         ("classList" in div) || base.addPolyfill(base.vendor_url+'domtokenlist.min.js'),
         ('validity' in input && 'badInput' in input.validity && 'patternMismatch' in input.validity && 'rangeOverflow' in input.validity && 'rangeUnderflow' in input.validity && 'stepMismatch' in input.validity && 'tooLong' in input.validity && 'tooShort' in input.validity && 'typeMismatch' in input.validity && 'valid' in input.validity && 'valueMissing' in input.validity) || base.addPolyfill(base.vendor_url+'domtokenlist.min.js');
 
-        Base.logger(base.polyfills, base.polyfillsCount);
+        Base.logger(base.polyfills);
+        Base.logger(base.polyfillsCount);
 
         if(base.polyfills.length > 0) {
             base.polyfills.forEach(function (url) {
@@ -131,7 +132,6 @@ class Base {
 
     updateBody() {
         window.bodyUpdate = false;
-        Base.logger(window.lastPageYOffset > 0);
         if(window.lastPageYOffset > 0) {
             document.documentElement.classList.add('scrolled');
         } else {
