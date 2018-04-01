@@ -35,13 +35,15 @@ let FontLoader = function () {
         let fontUrl = font.href + format;
         let fontName = font.getAttribute('name');
         let fontWeight = ('weight' in font.dataset) ? font.dataset.weight : 'normal';
-        newStyle.appendChild(document.createTextNode("\
+        let textNode = document.createTextNode("\
         @font-face {\
             font-family: " + fontName + ";\
             src: url('" + fontUrl + "') format('woff');\
             font-weight: " + fontWeight + ";\
         }\
-        "));
+        ");
+        console.log(textNode);
+        newStyle.appendChild(textNode);
 
         document.head.appendChild(newStyle);
     }
@@ -68,7 +70,7 @@ let FontLoader = function () {
 
         Base.logger(fonts);
 
-        let supportWoff2 = true;
+        let supportWoff2 = supportsWoff2();
 
         if ("FontFace" in window) {
             Base.logger("Font Face API supported.");
@@ -81,13 +83,15 @@ let FontLoader = function () {
             });
         } else {
             Base.logger("Font Face API not supported.");
-            fonts.forEach(function (font) {
+            for (let i = 0; i < fonts.length; i++) {
+                let font = fonts[i];
+                console.log(supportWoff2);
                 if (!supportWoff2) {
                     font.href = font.href.substring(0, font.href.length - 1);
                 }
                 loadFallback(font);
                 font.parentElement.removeChild(font);
-            });
+            }
         }
 
         // Add final class
