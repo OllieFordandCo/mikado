@@ -3,21 +3,33 @@ class Base {
         this.w = window;
         this.doc = document;
         this.html = this.doc.documentElement;
-        this.vendor_url = 'dist/js/vendor/';
         this.polyfills = [];
-        this.dev = true;
         this.polyfillsCount = 0;
 
-        if(this.dev) {
-            window.BaseDev = this.dev;
+        let prop;
+        
+        let baseConfigDefaults = {
+            dev: true,
+            vendor_url: 'dist/js/vendor/'
+        };
+
+        let baseConfig = window.baseConfig || {};
+
+        for(prop in baseConfigDefaults){
+            if(!(prop in baseConfig)){
+                baseConfig[prop] = baseConfigDefaults[prop];
+            }
         }
+
+        this.config = baseConfig;
 
         this.setPolyfills();
         this.init();
     }
 
     static logger(message) {
-        if(window.BaseDev) {
+        let config = window.baseConfig || { dev: false};
+        if(config.dev) {
             console.log(message);
         }
     }
@@ -97,13 +109,13 @@ class Base {
     setPolyfills() {
         let base = this, d = base.doc, w = base.w, img = document.createElement('img'), input = document.createElement('input'), div = d.createElement("div");
         ('Promise' in w) || base.addPolyfill('//cdn.jsdelivr.net/bluebird/3.5.0/bluebird.min.js'),
-        ('scrollBehavior' in d.documentElement.style) || base.addPolyfill(base.vendor_url+'smoothscroll.min.js'),
-        ('requestAnimationFrame' in w) || base.addPolyfill(base.vendor_url+'raf.min.js'),
-        ("function" === typeof CustomEvent) || base.addPolyfill(base.vendor_url+'custom-event.min.js'),
-        ("srcset" in img) || base.addPolyfill(base.vendor_url+'picturefill.min.js'),
-        ('dataset' in div) || base.addPolyfill(base.vendor_url+'dataset.min.js'),
-        ("classList" in div) || base.addPolyfill(base.vendor_url+'domtokenlist.min.js'),
-        ('validity' in input && 'badInput' in input.validity && 'patternMismatch' in input.validity && 'rangeOverflow' in input.validity && 'rangeUnderflow' in input.validity && 'stepMismatch' in input.validity && 'tooLong' in input.validity && 'tooShort' in input.validity && 'typeMismatch' in input.validity && 'valid' in input.validity && 'valueMissing' in input.validity) || base.addPolyfill(base.vendor_url+'domtokenlist.min.js');
+        ('scrollBehavior' in d.documentElement.style) || base.addPolyfill(base.config.vendor_url+'smoothscroll.min.js'),
+        ('requestAnimationFrame' in w) || base.addPolyfill(base.config.vendor_url+'raf.min.js'),
+        ("function" === typeof CustomEvent) || base.addPolyfill(base.config.vendor_url+'custom-event.min.js'),
+        ("srcset" in img) || base.addPolyfill(base.config.vendor_url+'picturefill.min.js'),
+        ('dataset' in div) || base.addPolyfill(base.config.vendor_url+'dataset.min.js'),
+        ("classList" in div) || base.addPolyfill(base.config.vendor_url+'domtokenlist.min.js'),
+        ('validity' in input && 'badInput' in input.validity && 'patternMismatch' in input.validity && 'rangeOverflow' in input.validity && 'rangeUnderflow' in input.validity && 'stepMismatch' in input.validity && 'tooLong' in input.validity && 'tooShort' in input.validity && 'typeMismatch' in input.validity && 'valid' in input.validity && 'valueMissing' in input.validity) || base.addPolyfill(base.config.vendor_url+'domtokenlist.min.js');
 
         Base.logger(base.polyfills);
         Base.logger(base.polyfillsCount);

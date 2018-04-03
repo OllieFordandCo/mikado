@@ -4,11 +4,26 @@ class Mikado {
         this.w = window;
         this.doc = document;
         this.html = this.doc.documentElement;
-        this.vendorUrl = 'dist/js/vendor/';
-        this.moduleUrl = 'dist/js/mikado/modules/';
         this.polyfillReady = false;
-        this.dev = false;
         this.systemReady = false;
+
+        let prop;
+
+        let mikadoConfigDefaults = {
+            module_url: 'dist/js/mikado/modules/',
+            vendor_url: 'dist/js/vendor/',
+            dev: false
+        };
+
+        let mikadoConfig = window.mikadoConfig || {};
+
+        for(prop in mikadoConfigDefaults){
+            if(!(prop in mikadoConfig)){
+                mikadoConfig[prop] = mikadoConfigDefaults[prop];
+            }
+        }
+
+        this.config = mikadoConfig;
 
         let mikado = this;
 
@@ -65,13 +80,14 @@ class Mikado {
     }
 
     moduleURL(module) {
-        return this.moduleUrl+module;
+        let config = window.mikadoConfig || {module_url: 'dist/js/vendor/'};
+        return config.module_url+module;
     }
 
     loadSystemJs() {
         // Critical for more complex imports.
         Mikado.loadConditionalGlobal('body', 'System', this.moduleURL('system.min.js'), function() {
-            systemConfig = systemConfig || {};
+            let systemConfig = window.systemConfig || {};
             SystemJS.config(systemConfig);
             Base.triggerEvent('systemReady');
         });
