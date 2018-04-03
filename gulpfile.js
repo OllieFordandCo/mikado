@@ -78,23 +78,6 @@ gulp.task('cp-modules', function(cb) {
  Other Gulp Tasks
  */
 
-gulp.task('base-es5-js', function(){
-    let asset_url = './src/js/es5/base/';
-    return gulp.src(
-        [
-            asset_url+'noJs.js',
-            asset_url+'loadScript.js',
-            asset_url+'polyfills.js',
-            asset_url+'loadCss.js',
-            asset_url+'dataCritical.js',
-            asset_url+'deferredStyles.js',
-            asset_url+'bodyScrolled.js'
-        ])
-        .pipe($.concat('base.es5.min.js'))
-        .pipe($.uglify())
-        .pipe(gulp.dest('dist/js/base'));
-});
-
 gulp.task('base-js', function(){
     return gulp.src('./src/js/base/base.js')
         .pipe($.babel({
@@ -119,7 +102,7 @@ gulp.task('mikado-js', function(){
         .pipe($.babel({
             presets: ["es2015"]
         }))
-        //.pipe($.uglify())
+        .pipe($.uglify())
         .pipe(gulp.dest('dist/js/mikado'));
 });
 
