@@ -52,19 +52,36 @@
         [data-reveal][data-reveal-fast] {
             transition: transform 300ms linear, opacity 300ms linear;
         }
+        .lazyload,
+        .lazyloading {
+            opacity: 0;
+        }
+        .lazyloaded {
+            opacity: 1;
+            transition: opacity 300ms;
+        }
     </style>
 </head>
 <body>
-    <div class="p-relative full-height" style="background-color:#ffd600;">
-        <div class="v-align">
-            <div data-relax-speed="-3" class="rellax p-absolute p-top p-left p-bottom p-right">
-                <div data-bg="./dist/images/mikado-bg.jpg" class="lazyload p-absolute p-top p-left p-bottom p-right"></div>
-            </div>
-            <div class="p-relative v-align-bottom">
-                <div class="container mx-auto">
-                    <div class="grid-row m-collapse-1 text-left">
-                        <div class="col-12 py-3">
-                            <h1 class="text-center display-3 text-white" data-reveal data-slide-down>Mikado</h1>
+    <div class="p-relative bg-black">
+        <div class="container-xs mx-auto full-height" style="background-color:#ffd600;">
+            <div class="v-align">
+                <div class="p-relative">
+                    <div class="container mx-auto">
+                        <div class="grid-row m-collapse-1 text-left">
+                            <div class="col-12 py-3 text-grey-dark text-center">
+                                <h1 class="text-center display-3 text-grey-dark" data-reveal data-slide-up>Mikado</h1>
+                                <p>Javascript web fundamentals.</p>
+                                <div>
+                                    <h5 class="text-grey-dark">Polyfills</h5>
+                                    <h5 class="text-grey-dark">Font Face API</h5>
+                                    <h5 class="text-grey-dark">Deferred Styles</h5>
+                                    <h5 class="text-grey-dark">SystemJS</h5>
+                                    <h5 class="text-grey-dark">Form Validation</h5>
+                                    <h5 class="text-grey-dark">SystemJS</h5>
+                                    <h5 class="text-grey-dark">Jank-free Scrolling Effects</h5>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -72,11 +89,11 @@
         </div>
     </div>
     <article class="container grid-row mx-auto py-1">
-        <h1 class="display-2">Form Validation</h1>
+        <h1 class="display-4">Form Validation</h1>
         <hr>
         <div class="grid-row grid-gutter m-collapse-1 my-3 d-block">
             <form class="col-12 col-sm-6 validate" data-reveal data-slide-left>
-                <h3 class="display-4">Login</h3>
+                <h3 class="h1">Login</h3>
                 <hr>
                 <fieldset>
                     <legend>Access your account</legend>
@@ -93,7 +110,7 @@
                 <button>Submit</button>
             </form>
             <form class="col-12 col-sm-6" data-reveal data-slide-right>
-                <h3 class="display-4">Register</h3>
+                <h3 class="h1">Register</h3>
                 <hr>
                 <fieldset>
                     <legend>Create a new account</legend>
@@ -125,10 +142,15 @@
                 </fieldset>
                 <button>Register</button>
             </form>
-            <form class="col-12">
+        </div>
+    </article>
+    <article class="bg-off-white">
+        <div class="grid-row grid-gutter m-collapse-1 d-block py-xl">
+        <form class="col-12">
+                <div class="container-xs mx-auto" data-reveal data-slide-left>
                 <h3 class="display-4">Checkout</h3>
                 <hr>
-                <fieldset class="col-12 col-sm-5" data-reveal data-slide-left>
+                <fieldset class="col-12">
                     <div class="grid-gutter m-collapse-1">
                         <legend class="col-12">Complete your purchase.</legend>
                         <div class="col-12">
@@ -154,16 +176,20 @@
                         </footer>
                     </div>
                 </fieldset>
+                </div>
             </form>
         </div>
     </article>
-    <div class="p-relative half-height" style="background-color:#ffd600;" data-reveal="full" data-fade-in data-reveal-fast data-reveal-once>
+    <div class="p-relative half-height py-3" style="background-color:#ffd600;">
+        <div class="p-absolute p-top p-left p-bottom p-right">
+            <div data-bg="./dist/images/mikado-bg.jpg" class="lazyload p-absolute p-top p-left p-bottom p-right"></div>
+        </div>
         <div class="v-align">
-            <div class="p-relative">
+            <div class="v-align-bottom p-relative">
                 <div class="container mx-auto">
                     <div class="grid-row m-collapse-1 text-left">
-                        <div class="col-12 py-3">
-                            <h1 data-rellax-speed="0.5" data-rellax-percentage="0.5" data-reveal="slide-up" class="rellax text-center display-3 text-white">Rellax!</h1>
+                        <div class="col-12 py-3 text-center">
+                            <p data-rellax-speed="0.5" data-rellax-percentage="0.5" data-reveal data-slide-down class="rellax text-center text-white">Copyright &copy; Ollie Ford & Co. All rights reserved.</p>
                         </div>
                     </div>
                 </div>
