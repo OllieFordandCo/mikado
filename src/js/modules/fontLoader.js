@@ -34,12 +34,14 @@ let FontLoader = function () {
         let newStyle = document.createElement('style');
         let fontUrl = font.href + format;
         let fontName = font.getAttribute('name');
+        let fontStyle = ('style' in font.dataset) ? font.dataset.style : 'normal';
         let fontWeight = ('weight' in font.dataset) ? font.dataset.weight : 'normal';
         let textNode = document.createTextNode("\
         @font-face {\
             font-family: " + fontName + ";\
             src: url('" + fontUrl + "') format('woff');\
             font-weight: " + fontWeight + ";\
+            font-style: " + fontStyle + ";\
         }\
         ");
         console.log(textNode);
@@ -53,16 +55,18 @@ let FontLoader = function () {
         let fontUrl = font.href + format;
         let fontName = font.getAttribute('name');
         let fontWeight = ('weight' in font.dataset) ? font.dataset.weight : 'normal';
+        let fontStyle = ('style' in font.dataset) ? font.dataset.style : 'normal';
 
         let Font = new FontFace(fontName, "url(" + fontUrl + ")", {
-            style: "normal",
+            style: fontStyle,
             weight: fontWeight
         });
 
         Font.loaded.then(function (font) {
-            document.documentElement.classList.add(fontName + '-' + fontWeight + '-' + font.status);
+            document.documentElement.classList.add(fontName + '-' + fontWeight + '-' + fontStyle + '-' + font.status);
         });
         document.fonts.add(Font);
+
     }
 
     function init() {
@@ -72,15 +76,17 @@ let FontLoader = function () {
 
         let supportWoff2 = supportsWoff2();
 
-        if ("FontFace" in window) {
+        if("FontFace" in window) {
             Base.logger("Font Face API supported.");
-            fonts.forEach(function (font) {
+
+            [].forEach.call(fonts, function (font) {
                 if (!supportWoff2) {
                     font.href = font.href.substring(0, font.href.length - 1);
                 }
                 loadNativeFont(font);
                 font.parentElement.removeChild(font);
             });
+
         } else {
             Base.logger("Font Face API not supported.");
             for (let i = 0; i < fonts.length; i++) {
@@ -95,7 +101,7 @@ let FontLoader = function () {
         }
 
         // Add final class
-        if ("fonts" in document) {
+        if("fonts" in document) {
             document.fonts.ready.then(function () {
                 document.documentElement.classList.add('fonts-loaded');
             });
