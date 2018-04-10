@@ -49,7 +49,7 @@ class Mikado {
     // If you truly need to chain more than one callback, you should wrap this function on the systemReady event so you know you will get the promise.
     static loadConditionalImport(selector, plugin, cb) {
         if(document.querySelector(selector)) {
-            if('System' in Window) {
+            if('System' in window) {
                 return System.import(plugin).then(cb);
             } else {
                 document.addEventListener('systemReady', function() {
