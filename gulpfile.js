@@ -106,8 +106,10 @@ gulp.task('mikado-js', function(){
         .pipe(gulp.dest('dist/js/mikado'));
 });
 
+/**
 gulp.task('modules-es5-js', function(){
-    return gulp.src('./src/js/modules-es5/**/*.js')
+    return gulp.src('./src/js/modules-es5/*.js')
         .pipe($.uglify())
         .pipe(gulp.dest('dist/js/mikado/modules/'));
 });
+**/

@@ -52,10 +52,11 @@ let FontLoader = function () {
 
     function loadNativeFont(font) {
 
-        let fontUrl = font.href + format;
-        let fontName = font.getAttribute('name');
-        let fontWeight = ('weight' in font.dataset) ? font.dataset.weight : 'normal';
-        let fontStyle = ('style' in font.dataset) ? font.dataset.style : 'normal';
+        let fontUrl = font.href + format,
+            fontName = font.getAttribute('name'),
+            fontClass = fontName.replace(' ', '-'),
+            fontWeight = ('weight' in font.dataset) ? font.dataset.weight : 'normal',
+            fontStyle = ('style' in font.dataset) ? font.dataset.style : 'normal';
 
         let Font = new FontFace(fontName, "url(" + fontUrl + ")", {
             style: fontStyle,
@@ -63,7 +64,7 @@ let FontLoader = function () {
         });
 
         Font.loaded.then(function (font) {
-            document.documentElement.classList.add(fontName + '-' + fontWeight + '-' + fontStyle + '-' + font.status);
+            document.documentElement.classList.add(fontClass + '-' + fontWeight + '-' + fontStyle + '-' + font.status);
         });
         document.fonts.add(Font);
 
