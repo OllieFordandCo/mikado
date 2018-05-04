@@ -37,7 +37,7 @@ function jsVendors(vendor) {
         .pipe(gulp.dest('./'));
 }
 
-gulp.task('cp-vendors', function(cb) {
+gulp.task('copy:vendors', function(cb) {
     let vendors = [];
     vendorList.forEach(function(vendor) {
         vendors.push(function(next) {
@@ -64,7 +64,7 @@ function jsModules(vendor) {
         .pipe(gulp.dest('./'));
 }
 
-gulp.task('cp-modules', function(cb) {
+gulp.task('copy:modules', function(cb) {
     let modules = [];
     moduleList.forEach(function(module) {
         modules.push(function(next) {
@@ -74,11 +74,26 @@ gulp.task('cp-modules', function(cb) {
     $.async.series(modules, cb);
 });
 
+gulp.task('copy:webcomponentsjs', function() {
+    gulp.src([
+
+        // Copy all files
+        './node_modules/@webcomponents/webcomponentsjs/*.js',
+        './node_modules/@webcomponents/webcomponentsjs/*.map'
+
+    ], {
+
+        // Include hidden files by default
+        dot: false
+
+    }).pipe(gulp.dest('dist/js/vendor'))
+});
+
 /*
  Other Gulp Tasks
  */
 
-gulp.task('base-js', function(){
+gulp.task('js:base', function(){
     return gulp.src('./src/js/base/base.js')
         .pipe($.babel({
             presets: ["es2015"]
@@ -87,7 +102,7 @@ gulp.task('base-js', function(){
         .pipe(gulp.dest('dist/js/base'));
 });
 
-gulp.task('modules-js', function(){
+gulp.task('js:modules', function(){
     return gulp.src('./src/js/modules/**/*.js')
         .pipe($.babel({
             presets: ["es2015"]
@@ -96,7 +111,7 @@ gulp.task('modules-js', function(){
         .pipe(gulp.dest('dist/js/mikado/modules/'));
 });
 
-gulp.task('mikado-js', function(){
+gulp.task('js:mikado', function(){
     return gulp.src(['./src/js/mikado/mikado.js'])
         .pipe($.concat('mikado.js'))
         .pipe($.babel({

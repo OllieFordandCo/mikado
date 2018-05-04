@@ -23,6 +23,7 @@
   "concat-map": "0.0.1",
   "copy": "^0.3.0",
   "gulp": "^3.9.1",
+  "gulp-babel": "^7.0.0",
   "gulp-concat": "^2.6.0",
   "gulp-jshint": "^2.0.1",
   "gulp-jspm": "^0.5.13",
@@ -32,7 +33,6 @@
   "gulp-replace": "^0.5.4",
   "gulp-sourcemaps": "^2.6.0",
   "gulp-uglify": "^1.5.4",
-  "gulp-babel": "^7.0.0",
   "gulp-util": "^3.0.7",
   "jshint": "^2.9.2",
   "merge-stream": "^1.0.0",
@@ -41,6 +41,7 @@
   "request": "^2.81.0"
  },
  "dependencies": {
+  "@webcomponents/webcomponentsjs": "^1.2.0",
   "custom-event-polyfill": "^0.3.0",
   "domtokenlist-shim": "^1.2.0",
   "es5-shim": "^4.5.9",

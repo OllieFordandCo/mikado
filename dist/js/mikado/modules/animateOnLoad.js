@@ -1,1 +1,0 @@
-window.addEventListener("load",function(e){var n=document.querySelectorAll(".animateonload");forEach(n,function(e,o){n[e].classList.remove("paused")})});

@@ -10,6 +10,7 @@ class Base {
         
         let baseConfigDefaults = {
             dev: true,
+            web_components: false,
             vendor_url: 'dist/js/vendor/'
         };
 
@@ -33,6 +34,17 @@ class Base {
             console.log(message);
         }
     }
+
+    static findAncestor (el, cls) {
+        while ((el = el.parentElement) && el.className.indexOf(cls) > -1);
+        return el;
+    }
+
+    static forEach(array, callback, scope) {
+        for (var i = 0; i < array.length; i++) {
+            callback.call(scope, i, array[i]); // passes back stuff we need
+        }
+    };
 
     loadCSS( href, before, media ){
         let doc = document;
@@ -115,7 +127,7 @@ class Base {
         ("srcset" in img) || base.addPolyfill(base.config.vendor_url+'picturefill.min.js'),
         ('dataset' in div) || base.addPolyfill(base.config.vendor_url+'dataset.min.js'),
         ("classList" in div) || base.addPolyfill(base.config.vendor_url+'domtokenlist.min.js'),
-        ('validity' in input && 'badInput' in input.validity && 'patternMismatch' in input.validity && 'rangeOverflow' in input.validity && 'rangeUnderflow' in input.validity && 'stepMismatch' in input.validity && 'tooLong' in input.validity && 'tooShort' in input.validity && 'typeMismatch' in input.validity && 'valid' in input.validity && 'valueMissing' in input.validity) || base.addPolyfill(base.config.vendor_url+'domtokenlist.min.js');
+        ('validity' in input && 'badInput' in input.validity && 'patternMismatch' in input.validity && 'rangeOverflow' in input.validity && 'rangeUnderflow' in input.validity && 'stepMismatch' in input.validity && 'tooLong' in input.validity && 'tooShort' in input.validity && 'typeMismatch' in input.validity && 'valid' in input.validity && 'valueMissing' in input.validity) || base.addPolyfill(base.config.vendor_url+'validityState-polyfill.min.js');
 
         Base.logger(base.polyfills);
         Base.logger(base.polyfillsCount);
@@ -133,6 +145,71 @@ class Base {
             Base.triggerEvent('polyfillReady');
         }
 
+    }
+
+    polyfillWebComponents() {
+        'use strict';
+        // global for (1) existence means `WebComponentsReady` will fire,
+        // (2) WebComponents.ready == true means event has fired.
+        window.WebComponents = window.WebComponents || {};
+        var name = 'webcomponents-loader.js';
+        // Feature detect which polyfill needs to be imported.
+        var polyfills = [];
+        if (!('import' in document.createElement('link'))) {
+            polyfills.push('hi');
+        }
+        if (!('attachShadow' in Element.prototype && 'getRootNode' in Element.prototype) ||
+            (window.ShadyDOM && window.ShadyDOM.force)) {
+            polyfills.push('sd');
+        }
+        if (!window.customElements || window.customElements.forcePolyfill) {
+            polyfills.push('ce');
+        }
+        // NOTE: any browser that does not have template or ES6 features
+        // must load the full suite (called `lite` for legacy reasons) of polyfills.
+        if (!('content' in document.createElement('template')) || !window.Promise || !Array.from ||
+                // Edge has broken fragment cloning which means you cannot clone template.content
+            !(document.createDocumentFragment().cloneNode() instanceof DocumentFragment)) {
+            polyfills = ['lite'];
+        }
+
+        if (polyfills.length) {
+            var script = document.querySelector('script[src*="' + name +'"]');
+            var newScript = document.createElement('script');
+            // Load it from the right place.
+            var replacement = base.config.vendor_url+'webcomponents-' + polyfills.join('-') + '.js';
+            newScript.src = script.src.replace(name, replacement);
+            // NOTE: this is required to ensure the polyfills are loaded before
+            // *native* html imports load on older Chrome versions. This *is* CSP
+            // compliant since CSP rules must have allowed this script to run.
+            // In all other cases, this can be async.
+            if (document.readyState === 'loading' && ('import' in document.createElement('link'))) {
+                document.write(newScript.outerHTML);
+            } else {
+                document.head.appendChild(newScript);
+            }
+        } else {
+            // Ensure `WebComponentsReady` is fired also when there are no polyfills loaded.
+            // however, we have to wait for the document to be in 'interactive' state,
+            // otherwise a rAF may fire before scripts in <body>
+
+            var fire = function() {
+                requestAnimationFrame(function() {
+                    window.WebComponents.ready = true;
+                    Base.logger('WebComponentReady');
+                    document.dispatchEvent(new CustomEvent('WebComponentsReady', {bubbles: true}));
+                });
+            };
+
+            if (document.readyState !== 'loading') {
+                fire();
+            } else {
+                document.addEventListener('readystatechange', function wait() {
+                    fire();
+                    document.removeEventListener('readystatechange', wait);
+                });
+            }
+        }
     }
 
     static triggerEvent(name) {
@@ -230,6 +307,9 @@ class Base {
 
         w.lastPageYOffset = 0;
         w.bodyUpdate = false;
+        if(this.config.web_components) {
+            this.polyfillWebComponents();
+        }
         w.addEventListener('scroll', this.bodyScroll, false);
 
         w.addEventListener('DOMContentLoaded', function() {

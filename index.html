@@ -16,6 +16,7 @@
             });
         });
     </script>
+    <script src="./dist/js/components/o-clock-es6.js"></script>
     <style>
         .overlay-bg {
             overflow: hidden;
@@ -45,7 +46,7 @@
         [data-fade-in]:not(.element-visible) {
             opacity: 0;
         }
-        [data-reveal] {
+        [data-reveal], [data-reveal-once] {
             transition: transform 600ms linear, opacity 600ms linear;
         }
 
@@ -60,10 +61,16 @@
             opacity: 1;
             transition: opacity 300ms;
         }
+        #elastic-element {
+            width: 50px;
+            height: 50px;
+            background-color: pink;
+        }
     </style>
 </head>
 <body>
     <div class="p-relative bg-black">
+        <div id="elastic-element" data-elastic data-elastic-property="left" data-elastic-from-to="0,1080" data-elastic-values="0,100" class="p-absolute p-bottom p-left"></div>
         <div class="container-xs mx-auto full-height" style="background-color:#ffd600;">
             <div class="v-align">
                 <div class="p-relative">
@@ -73,6 +80,7 @@
                                 <h1 class="text-center display-3 text-grey-dark" data-reveal data-slide-up>Mikado</h1>
                                 <p>Javascript web fundamentals.</p>
                                 <div>
+                                    <time-clock></time-clock>
                                     <h5 class="text-grey-dark">Polyfills</h5>
                                     <h5 class="text-grey-dark">Font Face API</h5>
                                     <h5 class="text-grey-dark">Deferred Styles</h5>
@@ -88,11 +96,71 @@
             </div>
         </div>
     </div>
+    <article class="bg-off-white">
+        <div class="grid-row grid-gutter m-collapse-1 d-block py-xl">
+            <form class="col-12">
+                <div class="container-xs mx-auto" data-reveal data-reveal-once>
+                    <div class="col-12">
+                        <h3 class="display-4">Documentation</h3>
+                        <hr>
+                        <style>
+                            #tab-list {
+                                padding: 20px;
+                                border: 1px solid #eee;
+                                transition-property: color, background-color;
+                                transition: 300ms linear;
+                            }
+                            #tab-list:not('.toggler-toggled') {
+                                background-color: #fff;
+                            }
+                            #tab-list.toggler-toggled a:before {
+                                content: "Untoggle";
+                            }
+                            #tab-list a:before {
+                                content: "Toggle";
+                            }
+                            #tab-list.toggler-toggled {
+                                background-color: #333;
+                            }
+                            #tab-list.toggler-toggled, #tab-list.toggler-toggled a {
+                                color: #fff;
+                            }
+
+                            .activated {
+                                background-color: #000;
+                                color: #fff !important;
+                            }
+                        </style>
+                        <h5>Toggler</h5>
+                        <div id="tab-list" role="tablist">
+                            <p><strong>A toogler allows you to add a toggling functionality to an element.</strong></p>
+                            <ul>
+                                <li>What will happen:</li>
+                                <li>Clicking on the button will always toggle the box class.</li>
+                                <li>But clicking on the box (the target) won't trigger the toggle.</li>
+                                <li><strong>But</strong> clicking outside the box (body) will untoggle the box if it has been toggled.</li>
+                            </ul>
+                            <a href="#" data-toggler data-toggler-target="#tab-list" data-toggler-dismiss="body"><span class="sr-only">Toggler Button</span></a>
+                        </div>
+
+                        <div id="toggle-group" class="button-group">
+                            <div>Radio toggle</div>
+                            <a href="#" class="py-1 btn-toggle d-inline-block px-2" data-toggler="activat" data-toggler-dismiss=".button-group .btn-toggle"><span>Select One</span></a>
+                            <a href="#" class="py-1 btn-toggle d-inline-block px-2" data-toggler="activat" data-toggler-dismiss=".button-group .btn-toggle"><span>Select Two</span></a>
+                            <a href="#" class="py-1 btn-toggle d-inline-block px-2" data-toggler="activat" data-toggler-dismiss=".button-group .btn-toggle"><span>Select Three</span></a>
+                            <a href="#" class="py-1 btn-toggle d-inline-block px-2" data-toggler="activat" data-toggler-dismiss=".button-group .btn-toggle"><span>Select Four</span></a>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </article>
     <article class="container grid-row mx-auto py-1">
         <h1 class="display-4">Form Validation</h1>
         <hr>
         <div class="grid-row grid-gutter m-collapse-1 my-3 d-block">
-            <form class="col-12 col-sm-6 validate" data-reveal data-slide-left>
+            <form class="col-12 col-sm-6 validate" data-reveal data-reveal-once data-slide-left>
                 <h3 class="h1">Login</h3>
                 <hr>
                 <fieldset>
@@ -109,7 +177,7 @@
                 </fieldset>
                 <button>Submit</button>
             </form>
-            <form class="col-12 col-sm-6" data-reveal data-slide-right>
+            <form class="col-12 col-sm-6" data-reveal data-reveal-once data-slide-right>
                 <h3 class="h1">Register</h3>
                 <hr>
                 <fieldset>
@@ -147,7 +215,7 @@
     <article class="bg-off-white">
         <div class="grid-row grid-gutter m-collapse-1 d-block py-xl">
         <form class="col-12">
-                <div class="container-xs mx-auto" data-reveal data-slide-left>
+                <div class="container-xs mx-auto" data-reveal data-reveal-once data-slide-left>
                 <h3 class="display-4">Checkout</h3>
                 <hr>
                 <fieldset class="col-12">
@@ -196,7 +264,7 @@
             </div>
         </div>
     </div>
-    <script src="dist/js/mikado/mikado.js"></script>
+    <script src="src/js/mikado/mikado.js"></script>
     <script src="dist/js/mikado/modules/onScrolling.js"></script>
     <script src="dist/js/mikado/modules/Reveal.js"></script>
     <script src="dist/js/mikado/modules/Elastic.js"></script>

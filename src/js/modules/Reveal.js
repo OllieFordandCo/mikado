@@ -24,23 +24,22 @@ class Reveal {
         return ((top >= 0) && (bottom <= window.innerHeight));
     }
 
-    reveal() {
-        if(reveal.elements.length > 0) {
-            for (let i = reveal.elements.length; i > -1; i--) {
-                if(reveal.elements[i] !== void 0) {
-                    let item = reveal.elements[i];
-                    let visibilityFunction = (item.dataset.reveal === 'full') ? 'isFullyVisible' : 'isPartiallyVisible';
+    reveal(position) {
 
-                    if (reveal[visibilityFunction](item)) {
-                        item.classList.add("element-visible");
-                        if('revealOnce' in item.dataset) {
-                            item.removeAttribute('data-reveal');
-                        }
-                    } else {
-                        item.classList.remove("element-visible");
+
+        if(reveal.elements.length > 0) {
+            Base.forEach(reveal.elements, function(index, item) {
+                let visibilityFunction = (item.dataset.reveal === 'full') ? 'isFullyVisible' : 'isPartiallyVisible';
+
+                if (reveal[visibilityFunction](item)) {
+                    item.classList.add("element-visible");
+                    if('revealOnce' in item.dataset) {
+                        item.removeAttribute('data-reveal');
                     }
+                } else {
+                    item.classList.remove("element-visible");
                 }
-            }
+            });
         }
         reveal.elements = document.querySelectorAll('[data-reveal]');
     }
@@ -48,7 +47,7 @@ class Reveal {
     init() {
         window.addEventListener("load", function() {
             reveal.elements = document.querySelectorAll('[data-reveal]');
-            console.log('Scroller active');
+            Base.logger('Reveal is active');
             reveal.reveal();
             window.onscrolling(function() {
                 reveal.reveal();
