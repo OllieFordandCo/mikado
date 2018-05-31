@@ -31,8 +31,10 @@ class Mikado {
             mikado.polyfillReady = true;
         });
 
+
         this.doc.addEventListener('DOMContentLoaded', function () {
             Base.logger('Window Loaded: loading enhancers...');
+            mikado.initHeightWatcher();
             mikado.initMenuToggle();
             mikado.loadEnhancers();
         });
@@ -205,6 +207,32 @@ class Mikado {
             Base.triggerEvent('loadLazySizes');
         }
 
+    }
+
+    static doHeightWatcher() {
+        console.log('updating Watchers');
+            var fullHeight = document.querySelectorAll('[data-height-watcher]'),
+                heightOffset = document.querySelectorAll('[data-height-offset]'),
+                computedOffsetHeight = 0;
+
+            console.log('doing Watchers');
+
+            Base.forEach(heightOffset, function(i, ele) {
+                computedOffsetHeight += ele.clientHeight;
+            });
+
+            Base.forEach(fullHeight, function(i, ele) {
+                var factor = ('heightFactor' in ele.dataset) ? ele.dataset.heightFactor : 1;
+                ele.style.height = ((window.innerHeight - computedOffsetHeight) * factor)+'px';
+            });
+    }
+
+    initHeightWatcher() {
+        requestAnimationFrame(function() {
+            Mikado.doHeightWatcher();
+        });
+        window.addEventListener('resize', base.throttle(Mikado.doHeightWatcher, 100));
+        window.addEventListener('load', Mikado.doHeightWatcher);
     }
 
     loadEnhancers() {

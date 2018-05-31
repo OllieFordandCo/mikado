@@ -5,6 +5,10 @@ class Base {
         this.html = this.doc.documentElement;
         this.polyfills = [];
         this.polyfillsCount = 0;
+        this.now = Date.now || function() {
+                return new Date().getTime();
+        };
+
 
         let prop;
         
@@ -44,6 +48,105 @@ class Base {
         for (var i = 0; i < array.length; i++) {
             callback.call(scope, i, array[i]); // passes back stuff we need
         }
+    };
+
+    throttle(func, wait, options) {
+        var timeout, context, args, result, mikado = this;
+        var previous = 0;
+        if (!options) options = {};
+
+        var later = function() {
+            previous = options.leading === false ? 0 : mikado.now();
+            timeout = null;
+            result = func.apply(context, args);
+            if (!timeout) context = args = null;
+        };
+
+        var throttled = function() {
+            var now = mikado.now();
+            if (!previous && options.leading === false) previous = now;
+            var remaining = wait - (now - previous);
+            context = this;
+            args = arguments;
+            if (remaining <= 0 || remaining > wait) {
+                if (timeout) {
+                    clearTimeout(timeout);
+                    timeout = null;
+                }
+                previous = now;
+                result = func.apply(context, args);
+                if (!timeout) context = args = null;
+            } else if (!timeout && options.trailing !== false) {
+                timeout = setTimeout(later, remaining);
+            }
+            return result;
+        };
+
+        throttled.cancel = function() {
+            clearTimeout(timeout);
+            previous = 0;
+            timeout = context = args = null;
+        };
+
+        return throttled;
+    };
+
+    restArguments(func, startIndex) {
+        startIndex = startIndex == null ? func.length - 1 : +startIndex;
+        return function() {
+            var length = Math.max(arguments.length - startIndex, 0),
+                rest = Array(length),
+                index = 0;
+            for (; index < length; index++) {
+                rest[index] = arguments[index + startIndex];
+            }
+            switch (startIndex) {
+                case 0: return func.call(this, rest);
+                case 1: return func.call(this, arguments[0], rest);
+                case 2: return func.call(this, arguments[0], arguments[1], rest);
+            }
+            var args = Array(startIndex + 1);
+            for (index = 0; index < startIndex; index++) {
+                args[index] = arguments[index];
+            }
+            args[startIndex] = rest;
+            return func.apply(this, args);
+        };
+    };
+
+    delay(func, wait, args) {
+        return setTimeout(function() {
+            return func.apply(null, args);
+        }, wait);
+    };
+
+    debounce(func, wait, immediate) {
+        var timeout, result, mikado = this;
+
+        var later = function(context, args) {
+            timeout = null;
+            if (args) result = func.apply(context, args);
+        };
+
+        var debounced = restArguments(function(args) {
+            if (timeout) clearTimeout(timeout);
+            if (immediate) {
+                var callNow = !timeout;
+                timeout = setTimeout(later, wait);
+                if (callNow) result = func.apply(this, args);
+            } else {
+                timeout = mikado.delay(later, wait, this, args);
+            }
+
+            return result;
+        });
+
+        debounced.cancel = function() {
+            clearTimeout(timeout);
+            timeout = null;
+        };
+
+        return debounced;
     };
 
     loadCSS( href, before, media ){
