@@ -5,21 +5,26 @@
  * --------------------------------------------------------------------------
  */
 
-'use strict';
-
-let FontLoader = function () {
+class FontLoader {
 
     /**
      * ------------------------------------------------------------------------
      * Private FontLoader Helpers
      * ------------------------------------------------------------------------
      */
-
-    let fonts = [];
-    let format = '';
+    constructor() {
+        this.w = window;
+        this.doc = document;
+        this.html = this.doc.documentElement;
+        this.now = Date.now || function() {
+                return new Date().getTime();
+            };
+        this.format = '';
+        this.init();
+    }
 
     // Source: https://github.com/filamentgroup/woff2-feature-test
-    function supportsWoff2() {
+    supportsWoff2() {
         if (!("FontFace" in window)) {
             return false;
         }
@@ -29,34 +34,36 @@ let FontLoader = function () {
         return f.status === 'loading' || f.status === 'loaded';
     }
 
-    function loadFallback(font) {
+    loadFallback(font) {
         //Good old fashion @font-face declaration
         let newStyle = document.createElement('style');
-        let fontUrl = font.href + format;
-        let fontName = font.getAttribute('name');
-        let fontStyle = ('style' in font.dataset) ? font.dataset.style : 'normal';
-        let fontWeight = ('weight' in font.dataset) ? font.dataset.weight : 'normal';
-        let textNode = document.createTextNode("\
-        @font-face {\
-            font-family: " + fontName + ";\
-            src: url('" + fontUrl + "') format('woff');\
-            font-weight: " + fontWeight + ";\
-            font-style: " + fontStyle + ";\
-        }\
-        ");
-        console.log(textNode);
+
+        let fontUrl = font.href + this.format,
+            fontName = font.dataset.name,
+            fontWeight = ('weight' in font.dataset) ? font.dataset.weight : 'normal',
+            fontStyle = ('style' in font.dataset) ? font.dataset.style : 'normal';
+
+        let textNode = document.createTextNode(`
+        @font-face {
+            font-family: ${fontName};
+            src: url('${fontUrl}') format('woff');
+            font-weight:${fontWeight}";
+            font-style:${fontStyle}";
+        }
+        `);
         newStyle.appendChild(textNode);
 
         document.head.appendChild(newStyle);
     }
 
-    function loadNativeFont(font) {
-
-        let fontUrl = font.href + format,
-            fontName = font.getAttribute('name'),
+    loadNativeFont(font) {
+        let fontUrl = font.href + this.format,
+            fontName = font.dataset.name,
             fontClass = fontName.replace(' ', '-'),
             fontWeight = ('weight' in font.dataset) ? font.dataset.weight : 'normal',
             fontStyle = ('style' in font.dataset) ? font.dataset.style : 'normal';
+
+        console.log(fontUrl);
 
         let Font = new FontFace(fontName, "url(" + fontUrl + ")", {
             style: fontStyle,
@@ -70,33 +77,82 @@ let FontLoader = function () {
 
     }
 
-    function init() {
-        let fonts = document.querySelectorAll('link[as="font"]');
+    loadDeferredFonts() {
+        let doc = this.doc,
+            fontloader = this;
+        this.w.addEventListener('load', function() {
+            let t = doc.getElementById("deferred-fonts");
+            if(t) {
+                requestAnimationFrame(function () {
+                    setTimeout(function () {
+                        let e = document.createElement("div");
+                        e.innerHTML = t.textContent;
+                        document.body.appendChild(e);
+                        t.parentElement.removeChild(t);
+                        requestAnimationFrame(function () {
+                            setTimeout(function () {
+                                document.documentElement.className = document.documentElement.className.replace("css-loading", "css-loaded");
+                                setTimeout(function() {
+                                    console.log('Info: All styles loaded, wait and trigger load.');
+                                    fontloader.triggerLoad();
+                                }, 400);
+                            }, 0);
+                        });
+                    }, 0);
+                });
+            } else {
+                console.log('Info: Deferred Fonts not found, skipping to Base Load');
+                fontloader.triggerLoad();
+            }
+        });
+    }
 
-        Base.logger(fonts);
+    triggerEvent(name) {
+        let event = new CustomEvent(name);
+        document.dispatchEvent(event);
+        console.log(name);
+        return false;
+    }
 
-        let supportWoff2 = supportsWoff2();
+    triggerLoad() {
+        let self = this;
+        this.doc.addEventListener('afterLoad', function() {
+            console.log('Event: The base has been loaded!');
+            self.init();
+        });
+        this.triggerEvent('afterLoad');
+    }
+
+    init() {
+        let self = this, fonts = document.querySelectorAll('link[as="font"]');
+
+        if(fonts.length === 0) {
+            self.loadDeferredFonts();
+            return;
+        }
+
+        let supportWoff2 = this.supportsWoff2();
 
         if("FontFace" in window) {
-            Base.logger("Font Face API supported.");
+            console.log("Font Face API supported.");
 
             [].forEach.call(fonts, function (font) {
                 if (!supportWoff2) {
                     font.href = font.href.substring(0, font.href.length - 1);
                 }
-                loadNativeFont(font);
+                self.loadNativeFont(font);
                 font.parentElement.removeChild(font);
             });
 
         } else {
-            Base.logger("Font Face API not supported.");
+            console.log("Font Face API not supported.");
             for (let i = 0; i < fonts.length; i++) {
                 let font = fonts[i];
                 console.log(supportWoff2);
                 if (!supportWoff2) {
                     font.href = font.href.substring(0, font.href.length - 1);
                 }
-                loadFallback(font);
+                this.loadFallback(font);
                 font.parentElement.removeChild(font);
             }
         }
@@ -111,8 +167,6 @@ let FontLoader = function () {
         }
     }
 
-    init();
-    document.addEventListener('afterLoad', init);
+}
 
-    return this;
-}(window);
+new FontLoader();
