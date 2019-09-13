@@ -324,10 +324,11 @@ class Base {
 
     updateBody() {
         window.bodyUpdate = false;
-        if(window.lastPageYOffset > 0) {
-            document.documentElement.classList.add('scrolled');
+        let documentElement = document.documentElement;
+        if(window.lastPageYOffset > 50) {
+            documentElement.classList.add('scrolled');
         } else {
-            document.documentElement.classList.remove('scrolled');
+            documentElement.classList.remove('scrolled');
         }
     }
 

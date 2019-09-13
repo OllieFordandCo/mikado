@@ -28,7 +28,6 @@ let vendorList = [
     ['./node_modules/es5-shim/es5-shim.min.js', 'es5-shim.min.js'],
     ['./node_modules/domtokenlist-shim/dist/domtokenlist.min.js', 'domtokenlist.min.js'],
     ['./node_modules/custom-event-polyfill/custom-event-polyfill.js', 'custom-event.min.js'],
-    ['./node_modules/validate/dist/validityState-polyfill.js', 'validityState-polyfill.min.js']
 ];
 
 function jsVendors(vendor) {
@@ -53,7 +52,8 @@ gulp.task('copy:vendors', function(cb) {
 
 let moduleList = [
     ['./node_modules/systemjs/dist/system.js', 'system.min.js'],
-    ['./node_modules/validate/dist/js/validate.js', 'validate.min.js'],
+    ['./node_modules/systemjs/dist/s.js', 's.min.js'],
+    //['./node_modules/validate/dist/js/validate.js', 'validate.min.js'],
     ['./node_modules/lazysizes/lazysizes.js', 'lazysizes.min.js'],
     ['./node_modules/lazysizes/plugins/unveilhooks/ls.unveilhooks.js', 'ls.unveilhooks.min.js']
 ];

@@ -177,7 +177,7 @@ class Mikado {
         // Critical for more complex imports.
         Mikado.loadConditionalGlobal('body', 'System', this.moduleURL('system.min.js'), function () {
             let systemConfig = window.systemConfig || {};
-            SystemJS.config(systemConfig);
+            //System.config(systemConfig);
             Base.triggerEvent('systemReady');
         });
     }
