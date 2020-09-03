@@ -45,7 +45,7 @@
   "custom-event-polyfill": "^0.3.0",
   "domtokenlist-shim": "^1.2.0",
   "es5-shim": "^4.5.9",
-  "lazysizes": "^4.0.2",
+  "lazysizes": "^5.2.1",
   "picturefill": "^3.0.2",
   "promise-polyfill": "^6.0.2",
   "raf.js": "0.0.4",
